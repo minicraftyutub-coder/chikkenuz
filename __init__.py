@@ -1,0 +1,1 @@
+# Chicken Money backend package
