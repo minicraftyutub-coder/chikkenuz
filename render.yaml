@@ -1,0 +1,38 @@
+services:
+  - type: web
+    name: chicken-money-web
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn backend.main:app --host 0.0.0.0 --port $PORT
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: WEBAPP_URL
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: DATABASE_PATH
+        value: /var/data/chicken_money.db
+    disk:
+      name: chicken-money-data
+      mountPath: /var/data
+      sizeGB: 1
+
+  - type: worker
+    name: chicken-money-bot
+    runtime: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: python bot.py
+    envVars:
+      - key: BOT_TOKEN
+        sync: false
+      - key: WEBAPP_URL
+        sync: false
+      - key: ADMIN_IDS
+        sync: false
+      - key: DATABASE_PATH
+        value: /var/data/chicken_money.db
+    disk:
+      name: chicken-money-data-worker
+      mountPath: /var/data
+      sizeGB: 1
